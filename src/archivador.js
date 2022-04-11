@@ -11,7 +11,10 @@ class Archivador {
         if (this.check(data)) {
             knex(this.tableName)
                 .insert(data)
-                .then(() => console.log("Guardado! =>", data))
+                .then(() => {
+                    console.log("Guardado! =>", data);
+                    return 1;
+                })
                 .catch((e) => console.log(e))
                 .finally(() => knex.destroy());
         }
