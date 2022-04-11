@@ -1,4 +1,3 @@
-const config = require("./options/SQLite3");
 const knex = require("knex");
 
 class Archivador {
@@ -9,14 +8,14 @@ class Archivador {
 
     async save(data) {
         if (this.check(data)) {
-            knex(this.tableName)
+            this.knex(this.tableName)
                 .insert(data)
                 .then(() => {
                     console.log("Guardado! =>", data);
                     return 1;
                 })
                 .catch((e) => console.log(e))
-                .finally(() => knex.destroy());
+                .finally(() => this.knex.destroy());
         }
     }
 }

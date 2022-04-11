@@ -6,29 +6,30 @@ class ArchivadorProductos extends Archivador {
     }
 
     async getAll() {
-        await knex(this.tableName)
+        await this.knex(this.tableName)
             .select("*")
-            .then((mensajes) => {
-                return mensajes;
+            .then((productos) => {
+                // console.log(productos);
+                return productos;
             })
             .catch((e) => console.log(e))
-            .finally(() => knex.destroy);
+            .finally(() => this.knex.destroy);
     }
 
     async getById(id) {
-        await knex(this.tableName)
+        await this.knex(this.tableName)
             .where({ id: id })
             .select("*")
             .then((producto) => {
                 return producto;
             })
             .catch((e) => console.log(e))
-            .finally(() => knex.destroy);
+            .finally(() => this.knex.destroy);
     }
 
     async setById(id, producto) {
         if (this.check(producto)) {
-            await knex(this.tableName)
+            await this.knex(this.tableName)
                 .where({ id: id })
                 .update({
                     title: producto.title,
@@ -37,34 +38,34 @@ class ArchivadorProductos extends Archivador {
                 })
                 .then(() => console.log("Producto modificado"))
                 .catch((e) => console.log(e))
-                .finally(() => knex.destroy);
+                .finally(() => this.knex.destroy);
         } else {
             console.log("Producto inválido.");
         }
     }
 
     async deleteById(id) {
-        await knex(this.tableName)
+        await this.knex(this.tableName)
             .where({ id: id })
             .del()
             .then(() => console.log("Producto borrado"))
             .catch((e) => console.log(e))
-            .finally(() => knex.destroy());
+            .finally(() => this.knex.destroy());
     }
 
     async chequearTabla() {
-        knex.schema.hasTable(tableName).then((exists) => {
+        this.knex.schema.hasTable(this.tableName).then((exists) => {
             if (!exists) {
-                knex.schema
-                    .createTable(tableName, (table) => {
+                this.knex.schema
+                    .createTable(this.tableName, (table) => {
                         table.increments("id");
                         table.string("title");
                         table.float("price");
                         table.string("thumbnail");
                     })
-                    .then(() => console.log("Tabla Creada:", tableName))
+                    .then(() => console.log("Tabla Creada:", this.tableName))
                     .catch((e) => console.log(e))
-                    .finally(() => knex.destroy());
+                    //.finally(() => this.knex.destroy());
             } else {
                 console.log("Tabla Productos existente.");
             }

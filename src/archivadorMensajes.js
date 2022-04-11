@@ -7,28 +7,28 @@ class ArchivadorMensajes extends Archivador {
     }
 
     async read() {
-        await knex(this.tableName)
+        await this.knex(this.tableName)
             .select("*")
             .then((mensajes) => {
                 return mensajes;
             })
             .catch((e) => console.log(e))
-            .finally(() => knex.destroy);
+            .finally(() => this.knex.destroy);
     }
 
     async chequearTabla() {
-        knex.schema.hasTable(tableName).then((exists) => {
+        this.knex.schema.hasTable(this.tableName).then((exists) => {
             if (!exists) {
-                knex.schema
-                    .createTable(tableName, (table) => {
+                this.knex.schema
+                    .createTable(this.tableName, (table) => {
                         table.increments("id");
                         table.string("texto");
                         table.string("mail");
                         table.string("timestamp");
                     })
-                    .then(() => console.log("Tabla Creada:", tableName))
+                    .then(() => console.log("Tabla Creada:", this.tableName))
                     .catch((e) => console.log(e))
-                    .finally(() => knex.destroy());
+                    //.finally(() => this.knex.destroy());
             } else {
                 console.log("Tabla Mensajes existente.");
             }

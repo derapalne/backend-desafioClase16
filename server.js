@@ -1,17 +1,19 @@
-const ArchivadorProductos = require("./archivadorProductos");
-const ArchivadorMensajes = require("./archivadorMensajes");
+const ArchivadorProductos = require("./src/archivadorProductos");
+const { optionsMariaDB } = require("./options/mariaDB");
+const ArchivadorMensajes = require("./src/archivadorMensajes");
+const { optionsSQLite } = require("./options/SQLite3");
+
 const express = require("express");
 const { Server: HttpServer } = require("http");
 const { Server: IOServer } = require("socket.io");
 
 const app = express();
-const productosApi = new ProductosAPI();
 const httpServer = new HttpServer(app);
 const io = new IOServer(httpServer);
 
-const archMensajes = new ArchivadorMensajes("chat");
+const archMensajes = new ArchivadorMensajes("chat", optionsSQLite);
 archMensajes.chequearTabla();
-const archProductos = new ArchivadorProductos("productos");
+const archProductos = new ArchivadorProductos("productos", optionsMariaDB);
 archProductos.chequearTabla();
 
 app.use(express.json());
@@ -43,20 +45,21 @@ const inicializarProductos = () => {
     });
 };
 
-inicializarProductos();
+// inicializarProductos();
 
 app.get("/", async (req, res) => {
     const productos = await archProductos.getAll();
     const mensajes = await archMensajes.read();
+    console.log(productos, mensajes);
     res.render("productosForm", { prods: productos, mensajes: mensajes});
 });
 
 const PORT = 8080;
 httpServer.listen(PORT, () => console.log("Lisstooooo ", PORT));
 
-io.on("connection", async (socket) => {
+io.on("connection", (socket) => {
     console.log(`Nuevo cliente conectado: ${socket.id.substring(0, 4)}`);
-    socket.on("productoAgregado", (producto) => {
+    socket.on("productoAgregado", async (producto) => {
         // console.log(producto);
         const respuestaApi = await archProductos.save(producto);
         // respuestaApi es el ID del producto, si no es un número, es un error (ver API)
