@@ -1,4 +1,4 @@
-const Archivador = require('./archivador');
+const Archivador = require("./archivador");
 
 class ArchivadorProductos extends Archivador {
     constructor(tableName, config) {
@@ -6,14 +6,16 @@ class ArchivadorProductos extends Archivador {
     }
 
     async getAll() {
+        let prods;
         await this.knex(this.tableName)
             .select("*")
             .then((productos) => {
-                // console.log(productos);
-                return productos;
+                // Si trato de retornar los datos desde acá, no llegan al servidor;
+                prods = productos;
             })
             .catch((e) => console.log(e))
             .finally(() => this.knex.destroy);
+        return prods;
     }
 
     async getById(id) {
@@ -64,8 +66,8 @@ class ArchivadorProductos extends Archivador {
                         table.string("thumbnail");
                     })
                     .then(() => console.log("Tabla Creada:", this.tableName))
-                    .catch((e) => console.log(e))
-                    //.finally(() => this.knex.destroy());
+                    .catch((e) => console.log(e));
+                //.finally(() => this.knex.destroy());
             } else {
                 console.log("Tabla Productos existente.");
             }

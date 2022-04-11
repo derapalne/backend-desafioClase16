@@ -15,7 +15,9 @@ class Archivador {
                     return 1;
                 })
                 .catch((e) => console.log(e))
-                .finally(() => this.knex.destroy());
+                //.finally(() => this.knex.destroy());
+        } else {
+            console.log(data, "Error");
         }
     }
 }

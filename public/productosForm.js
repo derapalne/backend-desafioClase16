@@ -45,7 +45,7 @@ enviar.addEventListener("click", (e) => {
     socket.emit("mensajeEnviado", {
         mail: mail.value,
         timestamp: timestamp,
-        message: mensajeChat.value
+        texto: mensajeChat.value
     });
     mensajeChat.value = '';
 });
@@ -55,7 +55,7 @@ socket.on('chatRefresh', (mensaje) => {
     chat.innerHTML += `<p>
     <strong style="color: #77f">${mensaje.mail}</strong>
     | ${mensaje.timestamp} :
-    <em style="color: green">${mensaje.message}</em>
+    <em style="color: green">${mensaje.texto}</em>
 </p>`;
 })
 

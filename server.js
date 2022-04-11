@@ -50,7 +50,7 @@ const inicializarProductos = () => {
 app.get("/", async (req, res) => {
     const productos = await archProductos.getAll();
     const mensajes = await archMensajes.read();
-    console.log(productos, mensajes);
+    // console.log("mensajes", mensajes);
     res.render("productosForm", { prods: productos, mensajes: mensajes});
 });
 

@@ -7,13 +7,16 @@ class ArchivadorMensajes extends Archivador {
     }
 
     async read() {
+        let mens;
         await this.knex(this.tableName)
             .select("*")
             .then((mensajes) => {
-                return mensajes;
+                mens = mensajes;
             })
             .catch((e) => console.log(e))
-            .finally(() => this.knex.destroy);
+            //.finally(() => this.knex.destroy);
+            // console.log({mens});
+            return mens;
     }
 
     async chequearTabla() {
@@ -37,12 +40,15 @@ class ArchivadorMensajes extends Archivador {
 
     check(mensaje) {
         if (!mensaje.texto) {
+            console.log('error texto')
             return false;
         }
         if (!mensaje.mail) {
+            console.log('error mail')
             return false;
         }
         if (!mensaje.timestamp) {
+            console.log('error timestamp')
             return false;
         }
         return true;
