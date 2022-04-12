@@ -62,10 +62,12 @@ io.on("connection", (socket) => {
     socket.on("productoAgregado", async (producto) => {
         // console.log(producto);
         const respuestaApi = await archProductos.save(producto);
+        console.log({respuestaApi});
         // respuestaApi es el ID del producto, si no es un número, es un error (ver API)
         if (isNaN(respuestaApi)) {
             socket.emit("productoInvalido", respuestaApi);
         } else {
+            console.log(respuestaApi, "producto valido");
             io.sockets.emit("productosRefresh", await archProductos.getAll());
         }
     });

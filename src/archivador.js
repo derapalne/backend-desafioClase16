@@ -12,12 +12,13 @@ class Archivador {
                 .insert(data)
                 .then(() => {
                     console.log("Guardado! =>", data);
-                    return 1;
                 })
                 .catch((e) => console.log(e))
+                return 1;
                 //.finally(() => this.knex.destroy());
         } else {
             console.log(data, "Error");
+            return "error";
         }
     }
 }
